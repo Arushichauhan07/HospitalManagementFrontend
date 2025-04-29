@@ -10,7 +10,7 @@ const AssignRoomForm = ({ setShowAssignRoomForm }) => {
   const { data: patients } = useGetPatientsQuery();
   const { data: rooms } = useGetRoomsQuery();
 
-  // console.log("patients",patients)
+  console.log("patients",patients)
   // console.log("rooms",rooms)
 
   const [formData, setFormData] = useState({
@@ -72,29 +72,20 @@ const AssignRoomForm = ({ setShowAssignRoomForm }) => {
           <label className="block text-sm font-medium text-gray-700">
             Patient
           </label>
-          {/* <select
+          <select
             name="patientId"
             value={formData.patientId}
             onChange={handleChange}
             className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-teal-400"
             required
           >
-            <option value="">Select Patient</option>
-            {patients?.map((patient) => (
-              <option key={patient._id} value={patient._id}>
-                {patient.name}
-              </option>
-            ))}
-          </select> */}
-          <input
-            type="text"
-            name="patientId"
-            value={formData.patientId}
-            onChange={handleChange}
-            min={1}
-            className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-2 text-sm shadow-sm focus:ring-2 focus:ring-teal-400"
-            required
-          />
+          <option value="">Select Patient</option>
+          {patients?.data?.map((patient) => (
+            <option key={patient._id} value={patient._id}>
+              {patient.name}
+            </option>
+          ))}
+        </select>
         </div>
 
         <div>

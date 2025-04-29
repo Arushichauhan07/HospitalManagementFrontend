@@ -255,8 +255,9 @@ const RoomsManagement = () => {
 
           </td>
           <td className="px-4 py-3 text-right">
+          <Trash2 className="h-5 w-5 ml-4" onClick={() => handleDelete(room)}/>
             {/* Room Actions */}
-            <DropdownMenu className="bg-white">
+            {/* <DropdownMenu className="bg-white">
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
                   <MoreHorizontal className="h-4 w-4" />
@@ -274,7 +275,7 @@ const RoomsManagement = () => {
                   Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
           </td>
         </tr>
           ))
@@ -345,7 +346,8 @@ const RoomsManagement = () => {
 
         </td>
         <td className="px-4 py-3 text-right">
-          <DropdownMenu className="bg-white">
+        <Trash2 className="h-5 w-5 ml-3" onClick={() => handleAssignRoomDelete(assignRoom)}/>
+          {/* <DropdownMenu className="bg-white">
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
                 <MoreHorizontal className="h-4 w-4" />
@@ -363,7 +365,7 @@ const RoomsManagement = () => {
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </td>
       </tr>
     ))

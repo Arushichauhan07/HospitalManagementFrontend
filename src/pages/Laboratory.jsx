@@ -1256,58 +1256,112 @@ export default function Laboratory() {
               <CardDescription>Manage laboratory test requests</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-4 gap-4 mb-4">
-                <Card className="bg-blue-50  dark:bg-blue-950 border-blue-200 dark:border-blue-800">
-                  <CardContent className="p-4 mt-4 flex items-center gap-4">
-                    <div className="bg-blue-100 dark:bg-blue-900 p-3 rounded-full">
-                      <Clock className="h-6 w-6 text-blue-500 dark:text-blue-300" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-blue-500 dark:text-blue-300">Pending</p>
-                      <p className="text-2xl font-bold">{testRequests?.filter((t) => t.status === "pending")?.length}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
-                  <CardContent className="p-4 flex mt-4 items-center gap-4">
-                    <div className="bg-amber-100 dark:bg-amber-900 p-3 rounded-full">
-                      <FlaskConical className="h-6 w-6 text-amber-500 dark:text-amber-300" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-amber-500 dark:text-amber-300">In Progress</p>
-                      <p className="text-2xl font-bold">
-                        {testRequests?.filter((t) => t.status === "in-progress")?.length}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800">
-                  <CardContent className="p-4 flex mt-4 items-center gap-4">
-                    <div className="bg-green-100 dark:bg-green-900 p-3 rounded-full">
-                      <ClipboardCheck className="h-6 w-6 text-green-500 dark:text-green-300" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-green-500 dark:text-green-300">Completed</p>
-                      <p className="text-2xl font-bold">
-                        {testRequests?.filter((t) => t.status === "completed")?.length}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-                <Card className="bg-rose-50 dark:bg-rose-950 border-rose-200 dark:border-rose-800">
-                  <CardContent className="p-4 flex mt-4 items-center gap-4">
-                    <div className="bg-rose-100 dark:bg-rose-900 p-3 rounded-full">
-                      <Clock className="h-6 w-6 text-rose-500 dark:text-rose-300" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-rose-500 dark:text-rose-300">Urgent</p>
-                      <p className="text-2xl font-bold">
-                        {testRequests?.filter((t) => t.Priority === "Urgent" || t.Priority === "High")?.length}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+            <div className="grid grid-cols-4 gap-4 mb-4">
+  {/* Pending */}
+  <Card
+    className={`border ${
+      isDark ? "bg-blue-950 border-blue-800" : "bg-blue-100 border-blue-200"
+    }`}
+  >
+    <CardContent className="p-4 mt-4 flex items-center gap-4">
+      <div
+        className={`p-3 rounded-full ${
+          isDark ? "bg-blue-900" : "bg-blue-100"
+        }`}
+      >
+        <Clock className="h-6 w-6 text-blue-500 dark:text-blue-300" />
+      </div>
+      <div>
+        <p className="text-sm font-medium text-blue-500 dark:text-blue-300">
+          Pending
+        </p>
+        <p className="text-2xl font-bold">
+          {testRequests?.filter((t) => t.status === "pending")?.length}
+        </p>
+      </div>
+    </CardContent>
+  </Card>
+
+  {/* In Progress */}
+  <Card
+    className={`border ${
+      isDark ? "bg-amber-950 border-amber-800" : "bg-amber-50 border-amber-200"
+    }`}
+  >
+    <CardContent className="p-4 mt-4 flex items-center gap-4">
+      <div
+        className={`p-3 rounded-full ${
+          isDark ? "bg-amber-900" : "bg-amber-100"
+        }`}
+      >
+        <FlaskConical className="h-6 w-6 text-amber-500 dark:text-amber-300" />
+      </div>
+      <div>
+        <p className="text-sm font-medium text-amber-500 dark:text-amber-300">
+          In Progress
+        </p>
+        <p className="text-2xl font-bold">
+          {testRequests?.filter((t) => t.status === "in-progress")?.length}
+        </p>
+      </div>
+    </CardContent>
+  </Card>
+
+  {/* Completed */}
+  <Card
+    className={`border ${
+      isDark ? "bg-green-950 border-green-800" : "bg-green-50 border-green-200"
+    }`}
+  >
+    <CardContent className="p-4 mt-4 flex items-center gap-4">
+      <div
+        className={`p-3 rounded-full ${
+          isDark ? "bg-green-900" : "bg-green-100"
+        }`}
+      >
+        <ClipboardCheck className="h-6 w-6 text-green-500 dark:text-green-300" />
+      </div>
+      <div>
+        <p className="text-sm font-medium text-green-500 dark:text-green-300">
+          Completed
+        </p>
+        <p className="text-2xl font-bold">
+          {testRequests?.filter((t) => t.status === "completed")?.length}
+        </p>
+      </div>
+    </CardContent>
+  </Card>
+
+  {/* Urgent */}
+  <Card
+    className={`border ${
+      isDark ? "bg-rose-950 border-rose-800" : "bg-rose-50 border-rose-200"
+    }`}
+  >
+    <CardContent className="p-4 mt-4 flex items-center gap-4">
+      <div
+        className={`p-3 rounded-full ${
+          isDark ? "bg-rose-900" : "bg-rose-100"
+        }`}
+      >
+        <Clock className="h-6 w-6 text-rose-500 dark:text-rose-300" />
+      </div>
+      <div>
+        <p className="text-sm font-medium text-rose-500 dark:text-rose-300">
+          Urgent
+        </p>
+        <p className="text-2xl font-bold">
+          {
+            testRequests?.filter(
+              (t) => t.Priority === "Urgent" || t.Priority === "High"
+            )?.length
+          }
+        </p>
+      </div>
+    </CardContent>
+  </Card>
+</div>
+
 
               <Table>
                 <TableHeader>
@@ -1340,28 +1394,41 @@ export default function Laboratory() {
                       </TableCell>
                       <TableCell>{test.DoctorId?.name}</TableCell>
                       <TableCell>
-                        <Badge
-                          className={cn(
-                            test.Priority === "Urgent"
-                              ? "bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-300"
-                              : test.Priority === "High"
-                                ? "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300"
-                                : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-                          )}
-                        >
+                      <Badge
+                        className={cn(
+                          test.Priority === "Urgent"
+                            ? isDark
+                              ? "bg-rose-900 text-rose-300"
+                              : "bg-rose-100 text-rose-800"
+                            : test.Priority === "High"
+                              ? isDark
+                                ? "bg-amber-900 text-amber-300"
+                                : "bg-amber-100 text-amber-800"
+                              : isDark
+                                ? "bg-blue-900 text-blue-300"
+                                : "bg-blue-100 text-blue-800"
+                       )}
+                      >
+
                           {test.Priority}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <Badge
-                          className={cn(
-                            test.status === "completed"
-                              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                              : test.status === "in-progress"
-                                ? "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300"
-                                : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+                      <Badge
+                    className={cn(
+                      test.status === "completed"
+                        ? isDark
+                          ? "bg-green-900 text-green-300"
+                          : "bg-green-100 text-green-800"
+                        : test.status === "in-progress"                 
+                          ? isDark
+                            ? "bg-amber-900 text-amber-300"
+                            : "bg-amber-100 text-amber-800"
+                          : isDark
+                            ? "bg-blue-900 text-blue-300"
+                            : "bg-blue-100 text-blue-800"
                           )}
-                        >
+                          >
                           {test.status.replace("-", " ")}
                         </Badge>
                       </TableCell>
@@ -1437,13 +1504,18 @@ export default function Laboratory() {
                       <TableCell>{result.testName}</TableCell>
                       <TableCell>{result?.resultDate.split("T")[0]}</TableCell>
                       <TableCell>
-                        <Badge
-                          className={cn(
-                            result.status === "normal"
-                              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
-                              : "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300",
-                          )}
-                        >
+                      <Badge
+                      className={cn(
+                        result.status === "normal"
+                          ? isDark
+                            ? "bg-green-900 text-green-300"
+                            : "bg-green-100 text-green-800"
+                          : isDark
+                            ? "bg-amber-900 text-amber-300"
+                            : "bg-amber-100 text-amber-800"
+                      )}
+                      >
+
                           {result.status}
                         </Badge>
                       </TableCell>
