@@ -4,11 +4,11 @@ const initialState = {
   mode: localStorage.getItem('mode') || 'light',
 
   header: {
-    color: localStorage.getItem('headerColor') || '#22c55e',
+    color: localStorage.getItem('headerColor') || '#ffffff',
     // gradient: localStorage.getItem('headerGradient') || 'bg-gradient-to-br from-slate-800 to-slate-600',
   },
   sidebar: {
-    color: localStorage.getItem('sidebarColor') || '#22c55e',
+    color: localStorage.getItem('sidebarColor') || '#ffffff',
     // gradient: localStorage.getItem('sidebarGradient') || 'bg-gradient-to-br from-slate-800 to-slate-600',
   },
 };

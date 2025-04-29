@@ -15,12 +15,12 @@ import {
 
 const colors = [
   "#ffffff", 
-  "#e4e4e7", 
-  "#4b5563", 
-  "#10b981", 
-  "#3b82f6", 
-  "#9333ea", 
-  "#000000", 
+  "#f0f0f2", 
+  "#a0a8b8", 
+  "#7de3c0", 
+  "#a6c8fc", 
+  "#caa2f7", 
+  "#d3d3d3",
   "bg-gradient-to-br from-slate-800 to-slate-600",
   "bg-gradient-to-br from-blue-500 to-blue-300",
   "bg-gradient-to-br from-purple-500 to-purple-300",
@@ -30,10 +30,12 @@ const colors = [
 
   const headerColors = [
     "#ffffff", 
-    "#fbfbfb", 
-    "#efeaed", 
-    "#d3d5d7", 
-    "#ffeee9",  
+    "#f0f0f2", 
+    "#a0a8b8", 
+    "#7de3c0", 
+    "#a6c8fc", 
+    "#caa2f7", 
+    "#d3d3d3", 
     "bg-gradient-to-br from-slate-800 to-slate-600",
     "bg-gradient-to-br from-blue-500 to-blue-300",
     "bg-gradient-to-br from-purple-500 to-purple-300",
@@ -108,7 +110,7 @@ const ThemeMenu = ({ setOpenMenu }) => {
           <div className="space-y-4 mt-3">
             <p className="text-sm text-gray-500">Solid Colors</p>
             <div className="flex flex-wrap gap-2">
-              {headerColors.slice(0,4).map((color) => (
+              {headerColors.slice(0,6).map((color) => (
                 <div
                   key={color}
                   className={clsx("w-8 h-8 rounded-full border-2 cursor-pointer", {
@@ -132,7 +134,7 @@ const ThemeMenu = ({ setOpenMenu }) => {
 
             <p className="text-sm text-gray-500 mt-4">Gradient Colors</p>
             <div className="flex flex-wrap gap-2">
-              {headerColors.slice(5, 11).map((gradient, i) => (
+              {headerColors.slice(7, 12).map((gradient, i) => (
                 <div
                   key={i}
                   className={clsx("w-8 h-8 rounded-full cursor-pointer border-2", gradient, {
