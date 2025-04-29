@@ -63,6 +63,8 @@ export default function Patients() {
   
   const { mode } = useSelector((state) => state.theme);
 
+  const isDark = mode === "dark";
+
   // console.log("data", patientsData)
   // Sample data for patients
   const [patients, setPatients] = useState(patientsData?.data || [])
@@ -204,7 +206,7 @@ export default function Patients() {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <Card className="bg-green-50 border-green-200 p-2">
+              <Card className={` p-2 ${isDark ? "bg-green-950 border-green-900" :"bg-green-50 border-green-200"}`}>
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start">
                     <div>
@@ -218,7 +220,7 @@ export default function Patients() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-blue-50 border-blue-200 p-2">
+              <Card className={` p-2 ${isDark ? "bg-blue-950 border-blue-900" :"bg-blue-50 border-blue-200"}`}>
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start">
                     <div>
@@ -233,7 +235,7 @@ export default function Patients() {
                 </CardContent>
               </Card>
 
-              <Card className="bg-purple-50 border-purple-200 p-2">
+              <Card className={` p-2 ${isDark ? "bg-purple-950 border-purple-900" :"bg-purple-50 border-purple-200"}`}>
                 <CardContent className="p-4">
                   <div className="flex justify-between items-start">
                     <div>

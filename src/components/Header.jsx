@@ -75,7 +75,7 @@ const Header = () => {
 
       {/* Right Section */}
       <div className="flex items-center gap-4">
-        <div className="hidden md:flex items-center border rounded-md px-3 py-1.5 text-sm lg:text-md">
+        <div className="hidden md:flex items-center border rounded-md px-3 py-1.5 text-sm lg:text-md text-white dark:text-black ">
           <Calendar className="h-4 w-4 mr-2" />
           <span>{today}</span>
         </div>
