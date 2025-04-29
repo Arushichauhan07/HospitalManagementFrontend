@@ -35,7 +35,9 @@
 
     const [localNotifications, setLocalNotifications] = useState([]);
     const { role } = useSelector((state) => state.role);
+    const { mode } = useSelector((state) => state.theme);
     
+    const isDark = mode === "dark"
       // Listen for Real-Time Notifications
       useEffect(() => {
         if (socket) {
@@ -91,8 +93,8 @@
     return (
       <div className="relative" ref={ref}>
         {/* Bell Icon */}
-        <button onClick={toggleModal} className="relative p-2 rounded-full hover:bg-gray-200">
-          <Bell className="h-6 w-6" />
+        <button onClick={toggleModal} className="relative p-2 rounded-full hover:bg-gray-200 text- dark:text-black">
+          <Bell className="h-6 w-6"/>
           {unreadCount > 0 && (
             <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-red-500 text-white text-xs flex items-center justify-center">
               {unreadCount}
@@ -102,7 +104,7 @@
 
         {/* Notification Modal */}
         {isOpen && (
-          <div className="absolute right-0 mt-2 w-96 bg-white shadow-lg rounded-lg border-2 border-teal-400 z-50">
+          <div className={`absolute right-0 mt-2 w-96 ${isDark ? "bg-gray-900" : "bg-white" } shadow-lg rounded-lg border-2 border-teal-400 z-50`}>
             <div className="flex justify-between items-center p-4 border-b border-teal-400">
               <h3 className="text-lg font-semibold">Notifications</h3>
               <button

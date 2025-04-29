@@ -8,6 +8,7 @@ import { useUpdatePermissionMutation } from "../../redux/slices/permissionSlice"
 import { useGetAllOrganizationQuery } from "../../redux/slices/organizationSlice";
 
 
+
 const AddPermissionModal = ({ closeAddModal, setIsAddModalOpen, initialPermissionData }) => {
     const [formData, setFormData] = useState({
         permission_name: "",
@@ -22,6 +23,9 @@ const AddPermissionModal = ({ closeAddModal, setIsAddModalOpen, initialPermissio
     const [ createPermission ] = useCreatePermissionMutation();
     const [ updatePermission ] = useUpdatePermissionMutation();
     const { data: organizations} = useGetAllOrganizationQuery();
+    const { mode } = useSelector((state) => state.theme);
+    
+    const isDark = mode === "dark";
     
     // console.log("organizations", organizations)
 
@@ -74,7 +78,7 @@ const AddPermissionModal = ({ closeAddModal, setIsAddModalOpen, initialPermissio
 
     return (
         <div className="fixed inset-0 bg-black/10 bg-opacity-40 flex items-center justify-center p-4 sm:p-8 min-h-screen">
-            <div ref={ref}  className="bg-white rounded-lg shadow-lg p-8 sm:p-10 max-h-[33rem] overflow-y-auto scrollbar-thin w-screen max-w-lg transition-transform transform scale-100">
+            <div ref={ref}  className={`${isDark ? "bg-black" : "bg-white"} rounded-lg shadow-lg p-8 sm:p-10 max-h-[33rem] overflow-y-auto scrollbar-thin w-screen max-w-lg transition-transform transform scale-100`}>
                 <div className="flex justify-between items-center border-b pb-4">
                     <h2 className="text-xl font-semibold mb-4">
                         {initialPermissionData ? "Edit Permission" : "Add Permission"}
@@ -133,7 +137,7 @@ const AddPermissionModal = ({ closeAddModal, setIsAddModalOpen, initialPermissio
                         </button>
                         <button
                             type="submit"
-                            className="bg-blue-500 text-white py-2 px-4 text-sm rounded-lg hover:bg-blue-600 transition"
+                            className={`py-2 px-4 text-sm rounded-lg transition ${isDark ? "bg-teal-800 hover:bg-teal-900 text-black" : "bg-teal-500 hover:bg-teal-600 text-white"} `}
                             disabled={loading}
                         >
                             {initialPermissionData ? (loading ? "Editing..." : "Edit Permission") : (loading ? "Creating..." : "Create Permission")}

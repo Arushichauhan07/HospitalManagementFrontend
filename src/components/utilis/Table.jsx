@@ -5,6 +5,9 @@ import "jspdf-autotable";
 import {useOutsideClick} from "../hooks/useOutsideClick";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useSelector } from "react-redux";
+
+
 // import Loading from "./Loading";
 const Table = ({
   title = "Table Title",
@@ -31,6 +34,9 @@ const Table = ({
   const fileInputRef = useRef(null);  // Ref for the file input
   // const apiUrl = process.env.REACT_APP_API_URL;
   // Use the custom hook to handle clicks outside the dropdown
+  const { mode } = useSelector((state) => state.theme);
+
+  const isDark = mode === "dark";
 
    const ref = useOutsideClick(() => {
     setDropdownOpen(false);
@@ -268,7 +274,7 @@ const handleFileImport = (event) => {
 
   return (
     <div className="h-auto">
-      <div className="max-w-[1410px] mx-auto bg-white border-2 border-teal-500 rounded-lg p-4">
+      <div className={`max-w-[1410px] mx-auto ${isDark ? "bg-black" : "bg-white"} border-2 border-teal-500 rounded-lg p-4`}>
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-4">
           <h1 className="text-xl md:text-2xl font-bold text-gray-700 mb-4 md:mb-0">
@@ -310,16 +316,21 @@ const handleFileImport = (event) => {
             </div>
             {actions.map((action, index) => (
               <button
-                key={index}
-                className={`px-3 py-2 
-                  ${action.disabled
-                    ? "bg-gray-300 text-gray-400 cursor-not-allowed"
-                    : action.primary
-                    ? "bg-blue-600 text-white hover:bg-blue-700"
-                    : "bg-gray-100 border border-gray-300 text-gray-600 hover:bg-gray-200"
-                } rounded-lg text-sm`}
-                onClick={action.onClick}
-              >
+              key={index}
+              className={`px-3 py-2 rounded-lg text-sm
+                ${action.disabled
+                  ? "bg-gray-300 text-gray-400 cursor-not-allowed"
+                  : action.primary
+                  ? isDark
+                    ? "bg-teal-700 text-white hover:bg-teal-800"
+                    : "bg-teal-600 text-white hover:bg-teal-700"
+                  : isDark
+                  ? "bg-gray-800 border border-gray-700 text-gray-300 hover:bg-gray-700"
+                  : "bg-gray-100 border border-gray-300 text-gray-600 hover:bg-gray-200"
+                }
+              `}
+              onClick={action.onClick}
+            >            
                 {action.icon} {action.label}
               </button>
             ))}
@@ -362,7 +373,7 @@ const handleFileImport = (event) => {
         {/* Table Section */}
         {loading ?<Loading /> : (<div className="overflow-x-auto">
           <table className="w-full table-auto border-collapse border border-gray-200">
-            <thead className="bg-gray-100">
+            <thead className={`${isDark ? "bg-gray-950" : "bg-gray-100"}`}>
               <tr>
                 {columns.map((column, index) => (
                   <th
@@ -377,12 +388,16 @@ const handleFileImport = (event) => {
             <tbody>
               {displayData.map((row, rowIndex) => (
                 <tr
-                  key={rowIndex}
-                  className={`${
-                    rowIndex % 2 === 0 ? "bg-white" : "bg-gray-50"
-                  } hover:bg-blue-50`}
-                  onClick={() => onRowClick(row)}
-                >
+                key={rowIndex}
+                className={`
+                  ${rowIndex % 2 === 0 
+                    ? isDark ? "bg-gray-950 text-white" : "bg-white" 
+                    : isDark ? "bg-gray-900 text-white" : "bg-gray-50"}
+                  ${isDark ? "hover:bg-gray-800" : "hover:bg-blue-50"}
+                `}
+                onClick={() => onRowClick(row)}
+              >
+              
                   {columns.map((column, colIndex) => {
                     // Check if the column is one where we want to apply specific colors
                     const cellValue = column.render
@@ -396,7 +411,7 @@ const handleFileImport = (event) => {
                     return (
                       <td
                         key={colIndex}
-                        className={`border border-gray-200 px-4 py-2 text-sm md:text-base text-gray-800 ${colorClass} ${
+                        className={`border border-gray-200 px-4 py-2 text-sm md:text-base ${isDark ? "text-gray-300" : "text-gray-800" }  ${colorClass} ${
                           column.className || ""
                         }`}
                       >
@@ -412,7 +427,7 @@ const handleFileImport = (event) => {
          {/* Pagination */}
          <div className="flex justify-between items-center mt-4">
           <button
-            className="px-3 py-1 bg-gray-200 rounded-md"
+            className={`px-3 py-1 ${isDark ? "bg-gray-500": "bg-gray-200"} rounded-md`}
             disabled={currentPage === 1}
             onClick={() => onPageChange(currentPage - 1)}
           >
@@ -422,7 +437,7 @@ const handleFileImport = (event) => {
             Page {currentPage} of {totalPages}
           </span>
           <button
-            className="px-3 py-1 bg-gray-200 rounded-md"
+            className={`px-3 py-1 ${isDark ? "bg-gray-500": "bg-gray-200"}  rounded-md`}
             disabled={currentPage === totalPages}
             onClick={() => onPageChange(currentPage + 1)}
           >

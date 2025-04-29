@@ -18,7 +18,7 @@ const AllRoles = () => {
     const { role } = useSelector((state) => state.role);
     const isSuperAdmin = role && role.toLowerCase() === "superadmin";
     const { data: roles, error: roleError, isSuccess: roleIsSuccess } = useGetRolesQuery();
-
+    
     const handleRoleEntriesChange = (value) => {
         setEntries(value);
         setCurrentPage(1);

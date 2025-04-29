@@ -53,7 +53,8 @@ import { useGetPatientsQuery } from "../redux/slices/patientSlice"
 import { useGetDoctorsQuery } from "../redux/slices/doctorSlice"
 import { useCreateLabTestMutation, useDeleteLabTestMutation, useGetLabTestsQuery, useUpdateLabTestMutation } from "../redux/slices/labTestSlice"
 import { useCreateLabReportMutation, useDeleteLabReportMutation, useGetLabReportsQuery, useUpdateLabReportMutation } from "../redux/slices/labReportSlice"
-import { useCreateAIDiagnosticMutation, useGetAIDiagnosticsQuery } from "../redux/slices/aiDiagnosticSlice"
+import { useCreateAIDiagnosticMutation, useGetAIDiagnosticsQuery } from "../redux/slices/aiDiagnosticSlice";
+import { useSelector } from "react-redux";
 
 export default function Laboratory() {
   const { data: patientsData } = useGetPatientsQuery();
@@ -91,6 +92,9 @@ export default function Laboratory() {
     { parameter: "", value: "", unit: "", referenceRange: "" },
   ]);
   const [editParameters, setEditParameters] = useState([]);
+  const { mode } = useSelector((state) => state.theme);
+  
+  const isDark = mode === "dark";
 
   useEffect(() => {
     if (selectedResult) {
@@ -1001,7 +1005,7 @@ export default function Laboratory() {
                     title="AI Analysis"
                     value={analyzedToday}
                     subtitle="Tests analyzed today"
-                    icon={<Brain className="h-5 w-5 text-blue-500 dark:text-blue-300" />}
+                    icon={<Brain className="h-5 w-5 text-blue-500 :text-blue-300" />}
                     bg="bg-blue-800 "
                   />
                   <InsightCard
@@ -1021,30 +1025,33 @@ export default function Laboratory() {
                 </div>
 
                 <div className="space-y-4">
-                  <InsightRow
-                    title="Anomaly Detection"
-                    desc={`AI detected ${totalAnomalies} potential anomalies that require review.`}
-                    icon={<AlertCircle className="h-5 w-5 text-blue-500 dark:text-blue-300" />}
-                    bg="bg-blue-100"
-                    buttonText="Review"
-                    onButtonClick={() => setShowReportsModal(true)}
-                  />
-                  <InsightRow
-                    title="Pattern Recognition"
-                    desc={`AI identified significant patterns in ${patternMatches} recent diagnostics.`}
-                    icon={<TrendingUp className="h-5 w-5 text-green-500 dark:text-green-300" />}
-                    bg="bg-green-100 "
-                    buttonText="Analyze"
-                    onButtonClick={() => setShowReportsModal(true)}
-                  />
-                  <InsightRow
-                    title="Automated Reporting"
-                    desc={`${autoReports} reports were automatically generated and are ready for review.`}
-                    icon={<FileText className="h-5 w-5 text-purple-500 dark:text-purple-300" />}
-                    bg="bg-purple-100"
-                    buttonText="View Reports"
-                    onButtonClick={() => setShowReportsModal(true)}
-                  />
+                <InsightRow
+                  title="Anomaly Detection"
+                  desc={`AI detected ${totalAnomalies} potential anomalies that require review.`}
+                  icon={<AlertCircle className="h-5 w-5 text-teal-500 dark:text-teal-300" />}
+                  bg={isDark ? "bg-teal-900" : "bg-teal-100"}
+                  buttonText="Review"
+                  onButtonClick={() => setShowReportsModal(true)}
+                />
+
+                <InsightRow
+                  title="Pattern Recognition"
+                  desc={`AI identified significant patterns in ${patternMatches} recent diagnostics.`}
+                  icon={<TrendingUp className="h-5 w-5 text-green-500 dark:text-green-300" />}
+                  bg={isDark ? "bg-green-900" : "bg-green-100"}
+                  buttonText="Analyze"
+                  onButtonClick={() => setShowReportsModal(true)}
+                />
+
+                <InsightRow
+                  title="Automated Reporting"
+                  desc={`${autoReports} reports were automatically generated and are ready for review.`}
+                  icon={<FileText className="h-5 w-5 text-purple-500 dark:text-purple-300" />}
+                  bg={isDark ? "bg-purple-900" : "bg-purple-100"}
+                  buttonText="View Reports"
+                  onButtonClick={() => setShowReportsModal(true)}
+                />
+
                 </div>
               </CardContent>
             </Card>
