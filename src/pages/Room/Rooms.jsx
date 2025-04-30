@@ -22,9 +22,9 @@ import { useSelector } from 'react-redux';
 const RoomsManagement = () => {
   const [tabValue, setTabValue] = useState("rooms");
   const [activeTab, setActiveTab] = useState('directory');
-  const { data } = useGetRoomsQuery();
-  const { data: assignRooms } = useGetAssignRoomsQuery();
-  const [deleteRoom, { isLoading }] = useDeleteRoomMutation();
+  const { data, isLoading } = useGetRoomsQuery();
+  const { data: assignRooms, isLoading:assignRoomDataLoading } = useGetAssignRoomsQuery();
+  const [deleteRoom] = useDeleteRoomMutation();
   const [deleteAssignRoom] = useDeleteAssignRoomMutation();
   const [showAddRoomForm, setShowAddRoomForm] = useState(false);
   const [showAssignRoomForm, setShowAssignRoomForm] = useState(false);
@@ -62,20 +62,60 @@ const RoomsManagement = () => {
       // setShowAddRoomForm(true);
     };
 
-    const filteredRooms = data?.data?.filter((room) =>
+
+    
+  // Pagination for Rooms.
+  const [roomCurrentPage, setRoomMealCurrentPage] = useState(1);
+  const roomitemsPerPage = 5;
+  const roomData = data?.data || []
+  const roomtotalPages = Math.ceil(roomData.length / roomitemsPerPage);
+
+  const paginatedRooms = roomData.slice(
+    (roomCurrentPage - 1) * roomitemsPerPage,
+    roomCurrentPage * roomitemsPerPage
+  );
+
+  const roomHandlePrev = () => setRoomMealCurrentPage(prev => Math.max(prev - 1, 1));
+  const roomHandleNext = () => setRoomMealCurrentPage(prev => Math.min(prev + 1, roomtotalPages));
+
+    const filteredRooms = paginatedRooms.filter((room) =>
       room.room_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
       room.roomType.toLowerCase().includes(searchTerm.toLowerCase()) ||
       room.room_name.toLowerCase().includes(searchTerm.toLowerCase())
 
     );
 
-    const filteredAssignRooms = assignRooms?.filter((room) =>
+    // Pagination for Assigned Rooms.
+    const [assignRoomCurrentPage, setAssignRoomCurrentPage] = useState(1);
+    const assignroomItemPerPage = 5;
+    const assignRoomData = assignRooms || []
+    const assignRoomTotalPages = Math.ceil(assignRoomData.length / assignroomItemPerPage);
+
+    const paginatedAssignRoom = assignRoomData.slice(
+      (assignRoomCurrentPage - 1) * assignroomItemPerPage,
+      assignRoomCurrentPage * assignroomItemPerPage
+    );
+
+    const assignRoomHandlePrev = () => setAssignRoomCurrentPage(prev => Math.max(prev - 1, 1));
+    const assignRoomHandleNext = () => setAssignRoomCurrentPage(prev => Math.min(prev + 1, assignRoomTotalPages));
+
+    const filteredAssignRooms = paginatedAssignRoom?.filter((room) =>
       room.roomId?.room_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
       room.roomId?.roomType.toLowerCase().includes(searchTerm.toLowerCase()) ||
       room.patientId?.id.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
 
+    if (isLoading || assignRoomDataLoading) {
+      return (
+          <div className="flex items-center justify-center h-screen">
+              <div className="flex flex-col items-center">
+                  <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-teal-500"></div>
+                  <p className="mt-4 text-gray-600">Loading...</p>
+              </div>
+          </div>
+      );
+  }
   return (
     <div className={`p-4 ${isDark ? "bg-black" : "bg-gray-50"} min-h-screen`}>
       
@@ -285,6 +325,31 @@ const RoomsManagement = () => {
 
       </div>
     </div>
+     {roomData.length >= 5 && (
+                              <div className="border-t border-gray-200 py-4 flex items-center justify-between px-6">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-teal-500 hover:text-teal-600"
+                                  onClick={roomHandlePrev}
+                                  disabled={roomCurrentPage === 1}
+                                >
+                                  Previous
+                                </Button>
+                                <p className="text-sm text-gray-500">
+                                  Page {roomCurrentPage} of {roomtotalPages}
+                                </p>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-teal-500 hover:text-teal-600"
+                                  onClick={roomHandleNext}
+                                  disabled={roomCurrentPage === roomtotalPages}
+                                >
+                                  Next
+                                </Button>
+                              </div>
+              )}
   </TabsContent>
 
   {/* Room Assignments Content */}
@@ -375,6 +440,30 @@ const RoomsManagement = () => {
         </table>
       </div>
     </div>
+    {assignRoomData.length >= 5 && (
+    <div className="border-t border-gray-200 py-4 flex items-center justify-between px-6">
+      <Button
+        variant="ghost"
+        size="sm"
+        className="text-teal-500 hover:text-teal-600"
+        onClick={assignRoomHandlePrev}
+        disabled={assignRoomCurrentPage === 1}
+      >
+        Previous
+      </Button>
+      <p className="text-sm text-gray-500">
+        Page {assignRoomCurrentPage} of {assignRoomTotalPages}
+      </p>
+      <Button
+        variant="ghost"
+        size="sm"
+        className="text-teal-500 hover:text-teal-600"
+        onClick={assignRoomHandleNext}
+        disabled={assignRoomCurrentPage === assignRoomTotalPages}
+      >
+        Next
+      </Button>
+    </div>)}
   </TabsContent>
       </Tabs>
     </div>

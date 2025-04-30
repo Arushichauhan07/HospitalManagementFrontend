@@ -43,7 +43,7 @@ export default function Inventory() {
       supplier: '',
       unit: 'pieces',
       minStock: 0,
-      status:'In stock'
+      status:'In Stock'
     }
   ]);
 
@@ -257,8 +257,23 @@ export default function Inventory() {
   //   },
   // ])
 
+  // Pagination for MealPlans.
+
+  const [currentPage, setcurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const inventoryDatas = inventoryData?.data || []
+  const totalPages = Math.ceil(inventoryDatas.length / itemsPerPage);
+
+  const paginatedMealPlans = inventoryDatas.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePrev = () => setcurrentPage(prev => Math.max(prev - 1, 1));
+  const handleNext = () => setcurrentPage(prev => Math.min(prev + 1, totalPages));
+
   // Filter items based on search query
-  const filteredItems = inventoryData?.data.filter(
+  const filteredItems = paginatedMealPlans.filter(
     (item) =>
       item.itemName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.inventoryId.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -532,6 +547,31 @@ export default function Inventory() {
               </Table>
             </div>
           </div>
+          {inventoryDatas.length >= 5 && (
+                <div className="border-t border-gray-200 py-4 flex items-center justify-between px-6">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-teal-500 hover:text-teal-600"
+                    onClick={handlePrev}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+                  <p className="text-sm text-gray-500">
+                    Page {currentPage} of {totalPages}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-teal-500 hover:text-teal-600"
+                    onClick={handleNext}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+)}
         </TabsContent>
 
         {/* <TabsContent value="transactions" className="mt-4">
@@ -634,7 +674,7 @@ export default function Inventory() {
         {
           label: "Status",
           name: "status",
-          options: ["In stock", "Low Stock", "Out of Stock"],
+          options: ["In Stock", "Low Stock", "Out of Stock"],
         },
       ].map(({ label, name, options }) => (
         <div key={name} className="grid grid-cols-4 items-center gap-4">

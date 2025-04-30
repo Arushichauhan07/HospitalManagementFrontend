@@ -109,17 +109,44 @@ export default function Insurance() {
   //   return <div className="flex items-center justify-center h-screen">loader..................</div>
   // }
 
+   const [provideCurrentPage, setProviderCurrentPage] = useState(1);
+    const provideritemsPerPage = 5;
+    const providersdata = providers || []
+    const providersTotalPage = Math.ceil(providersdata.length / provideritemsPerPage);
+  
+    const paginatedProviders = providersdata.slice(
+      (provideCurrentPage - 1) * provideritemsPerPage,
+      provideCurrentPage * provideritemsPerPage
+    );
+  
+    const providersHandlePrev = () => setProviderCurrentPage(prev => Math.max(prev - 1, 1));
+    const providersHandleNext = () => setProviderCurrentPage(prev => Math.min(prev + 1, providersTotalPage));
+  
 
   // Filter providers based on search query
-  const filteredProviders = providers?.filter(
+  const filteredProviders = paginatedProviders?.filter(
     (provider) =>
       provider?.name?.toLowerCase().includes(searchQuery?.toLowerCase()) ||
       provider?.id?.toLowerCase().includes(searchQuery?.toLowerCase()) ||
       provider?.type?.toLowerCase().includes(searchQuery?.toLowerCase()),
   )
 
+    const [claimCurrentPage, setClaimCurrentPage] = useState(1);
+    const claimitemsPerPage = 5;
+    const claimsData = claims || []
+    const claimsTotalPage = Math.ceil(claimsData.length / claimitemsPerPage);
+  
+    const paginatedClaims = claimsData.slice(
+      (claimCurrentPage - 1) * claimitemsPerPage,
+      claimCurrentPage * claimitemsPerPage
+    );
+  
+
+    const claimsHandlePrev = () => setClaimCurrentPage(prev => Math.max(prev - 1, 1));
+    const claimsHandleNext = () => setClaimCurrentPage(prev => Math.min(prev + 1, claimsTotalPage));
+
   // Filter claims based on search query
-  const filteredClaims = claims?.filter(
+  const filteredClaims = paginatedClaims?.filter(
     (claim) =>
       claim?.patientName?.email?.toLowerCase().includes(searchQuery?.toLowerCase()) ||
       claim?.patientId?.name?.toLowerCase().includes(searchQuery?.toLowerCase()) ||
@@ -428,6 +455,31 @@ if (isLoading || claimIsLoading) {
               </Table>
             </CardContent>
           </Card>
+          {providersdata.length >= 5 && (
+            <div className="border-t border-gray-200 py-4 flex items-center justify-between px-6">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-teal-500 hover:text-teal-600"
+                onClick={providersHandlePrev}
+                disabled={provideCurrentPage === 1}
+              >
+                Previous
+              </Button>
+              <p className="text-sm text-gray-500">
+                Page {provideCurrentPage} of {providersTotalPage}
+              </p>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-teal-500 hover:text-teal-600"
+                onClick={providersHandleNext}
+                disabled={provideCurrentPage === providersTotalPage}
+              >
+                Next
+              </Button>
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="claims" className="mt-4">
@@ -534,6 +586,31 @@ if (isLoading || claimIsLoading) {
               </Table>
             </CardContent>
           </Card>
+          {claimsData.length >= 5 && (
+            <div className="border-t border-gray-200 py-4 flex items-center justify-between px-6">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-teal-500 hover:text-teal-600"
+                onClick={claimsHandlePrev}
+                disabled={claimCurrentPage === 1}
+              >
+                Previous
+              </Button>
+              <p className="text-sm text-gray-500">
+                Page {claimCurrentPage} of {claimsTotalPage}
+              </p>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-teal-500 hover:text-teal-600"
+                onClick={claimsHandleNext}
+                disabled={claimCurrentPage === claimsTotalPage}
+              >
+                Next
+              </Button>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
 

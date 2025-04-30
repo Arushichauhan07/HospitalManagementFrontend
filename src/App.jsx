@@ -94,7 +94,14 @@ function App() {
   }, [role]); 
 
   if (!roleLoaded) {
-    return <div>Loading...</div>; // Show a loader until the role is available
+    return (
+      <div className="flex items-center justify-center h-screen">
+          <div className="flex flex-col items-center">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-teal-500"></div>
+              <p className="mt-4 text-gray-600">Loading...</p>
+          </div>
+      </div>
+  );
   }
 
   const checkTokenExpiry = () => {

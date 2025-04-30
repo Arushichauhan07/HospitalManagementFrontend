@@ -43,7 +43,7 @@ export default function MealPlans() {
   const [showBillingForm, setShowBillingForm] = useState(false)
   const { data: mealPlans, isLoading, error } = useGetMealPlansQuery();
   const { data: patientData } = useGetPatientsQuery();
-  const { data: patientMeal } = useGetPatientMealQuery();
+  const { data: patientMeal, isLoading: patientMealLoading } = useGetPatientMealQuery();
   const [createMealPlan] = useCreateMealPlanMutation();
   const [createPatientMeal] = useCreatePatientMealMutation();
   const [deleteMealPlan] = useDeleteMealPlanMutation();
@@ -189,7 +189,7 @@ export default function MealPlans() {
         });
       }
   
-      console.log("response", response)
+      // console.log("response", response)
       if (response?.success === true) {
         socket.emit("meal-plan-assigned", {
           to: response.data.patientDetails,
@@ -230,14 +230,48 @@ export default function MealPlans() {
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
 
-  const filteredMealPlans = mealPlans?.data?.filter((plan) => {
+
+// Pagination for MealPlans.
+
+  const [mealCurrentPage, setMealCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const pagmealPlans = mealPlans?.data || []
+  const mealtotalPages = Math.ceil(pagmealPlans.length / itemsPerPage);
+
+  const paginatedMealPlans = pagmealPlans.slice(
+    (mealCurrentPage - 1) * itemsPerPage,
+    mealCurrentPage * itemsPerPage
+  );
+
+  const mealHandlePrev = () => setMealCurrentPage(prev => Math.max(prev - 1, 1));
+  const mealHandleNext = () => setMealCurrentPage(prev => Math.min(prev + 1, mealtotalPages));
+
+
+  const filteredMealPlans = paginatedMealPlans.filter((plan) => {
     const matchesSearch = plan.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesType = selectedType === 'all' || plan.type === selectedType;
     return matchesSearch && matchesType;
   });
+
+  // Pagination for Patient MealPlans.
+
+  const [patientmealCurrentPage, setPatientMealCurrentPage] = useState(1);
+  const itemsPatientPerPage = 5;
+  const patpagmealPlans = patientMeal?.data || []
+  const patientmealtotalPages = Math.ceil(patpagmealPlans.length / itemsPatientPerPage);
+
+  // console.log("patientMeal?.data", patientMeal?.data)
+
+  const paginatedPatientMealPlans = patpagmealPlans.slice(
+    (patientmealCurrentPage - 1) * itemsPatientPerPage,
+    patientmealCurrentPage * itemsPatientPerPage
+  );
+
+  // console.log("paginatedPatientMealPlans", paginatedPatientMealPlans)
+
+  const patientMealHandlePrev = () => setPatientMealCurrentPage(prev => Math.max(prev - 1, 1));
+  const patientMealHandleNext = () => setPatientMealCurrentPage(prev => Math.min(prev + 1, patientmealtotalPages));
 
   const filteredMealPlanBills = patientMeal?.data?.filter((plan) => {
     const matchesSearch = plan.MealPlan.name.toLowerCase().includes(searchBillTerm.toLowerCase());
@@ -284,6 +318,17 @@ export default function MealPlans() {
       ? "bg-gray-800 text-gray-300"
       : "bg-gray-100 text-gray-800");
   };
+
+  if (isLoading || patientMealLoading) {
+    return (
+        <div className="flex items-center justify-center h-screen">
+            <div className="flex flex-col items-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-teal-500"></div>
+                <p className="mt-4 text-gray-600">Loading...</p>
+            </div>
+        </div>
+    );
+}
 
   return (
     <>
@@ -411,7 +456,35 @@ export default function MealPlans() {
                 </Table>
               </CardContent>
             </Card>
+
+            {pagmealPlans.length >= 5 && (
+                          <div className="border-t border-gray-200 py-4 flex items-center justify-between px-6">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-teal-500 hover:text-teal-600"
+                              onClick={mealHandlePrev}
+                              disabled={mealCurrentPage === 1}
+                            >
+                              Previous
+                            </Button>
+                            <p className="text-sm text-gray-500">
+                              Page {mealCurrentPage} of {mealtotalPages}
+                            </p>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-teal-500 hover:text-teal-600"
+                              onClick={mealHandleNext}
+                              disabled={mealCurrentPage === mealtotalPages}
+                            >
+                              Next
+                            </Button>
+                          </div>
+          )}
           </TabsContent>
+
+          
 
           {/* Patient Assignments Tab */}
           <TabsContent value="assignments">
@@ -445,7 +518,7 @@ export default function MealPlans() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {patientMeal?.data?.map((assignment) => (
+                    {paginatedPatientMealPlans?.map((assignment) => (
                       <TableRow key={assignment.id}>
                         <TableCell>{assignment?.patientDetails?.id}</TableCell>
                         <TableCell className="font-medium">{assignment?.patientDetails?.name}</TableCell>
@@ -479,7 +552,35 @@ export default function MealPlans() {
                 </Table>
               </CardContent>
             </Card>
+
+            {patpagmealPlans.length >= 5 && (
+                          <div className="border-t border-gray-200 py-4 flex items-center justify-between px-6">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-teal-500 hover:text-teal-600"
+                              onClick={patientMealHandlePrev}
+                              disabled={patientmealCurrentPage === 1}
+                            >
+                              Previous
+                            </Button>
+                            <p className="text-sm text-gray-500">
+                              Page {patientmealCurrentPage} of {patientmealtotalPages}
+                            </p>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-teal-500 hover:text-teal-600"
+                              onClick={patientMealHandleNext}
+                              disabled={patientmealCurrentPage === patientmealtotalPages}
+                            >
+                              Next
+                            </Button>
+                          </div>
+          )}
+
           </TabsContent>
+
 
           {/* Billing Records Tab */}
           <TabsContent value="billing">

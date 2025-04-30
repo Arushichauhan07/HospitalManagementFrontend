@@ -170,17 +170,6 @@ console.log("appointmentData", appointmentData)
     return appointmentData?.data.filter((appointment) => appointment.date === dateString)
   }
 
-  // Filter appointments based on search query
-  const filteredAppointments = appointmentData?.data?.filter((appointment) => {
-    const query = searchQuery.toLowerCase();
-  
-    return (
-      appointment?.id?.toLowerCase().includes(query) ||
-      appointment?.status?.toLowerCase().includes(query) ||
-      appointment?.patientId?.name.toLowerCase().includes(query) ||
-      appointment?.doctorId?.name.toLowerCase().includes(query)
-    );
-  });
 
   // Handle adding a new appointment
   const handleAddAppointment = async (newAppointment) => {
@@ -259,6 +248,33 @@ console.log("appointmentData", appointmentData)
 
   const { mode } = useSelector((state) => state.theme);
   const isDark = mode === "dark";
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const appointments = appointmentData?.data || []
+  const totalPages = Math.ceil(appointments.length / itemsPerPage);
+
+  const paginatedAppointments = appointments.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Filter appointments based on search query
+  const filteredAppointments = paginatedAppointments.filter((appointment) => {
+    const query = searchQuery.toLowerCase();
+  
+    return (
+      appointment?.id?.toLowerCase().includes(query) ||
+      appointment?.status?.toLowerCase().includes(query) ||
+      appointment?.patientId?.name.toLowerCase().includes(query) ||
+      appointment?.doctorId?.name.toLowerCase().includes(query)
+    );
+  });
+
+  const handlePrev = () => setCurrentPage(prev => Math.max(prev - 1, 1));
+  const handleNext = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
+
   return (
     <>
       <div className="flex items-center justify-between mb-6">
@@ -419,7 +435,7 @@ console.log("appointmentData", appointmentData)
                     <div>
                       <p className="text-sm font-medium text-green-500 ">Confirmed</p>
                       <p className="text-2xl font-bold">
-                        {appointmentData?.data.filter((a) => a.status === "confirmed").length}
+                        {paginatedAppointments.filter((a) => a.status === "confirmed").length}
                       </p>
                     </div>
                   </CardContent>
@@ -431,7 +447,7 @@ console.log("appointmentData", appointmentData)
                     </div>
                     <div>
                       <p className="text-sm font-medium text-amber-500">Pending</p>
-                      <p className="text-2xl font-bold">{appointmentData?.data.filter((a) => a.status === "pending").length}</p>
+                      <p className="text-2xl font-bold">{paginatedAppointments.filter((a) => a.status === "pending").length}</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -443,7 +459,7 @@ console.log("appointmentData", appointmentData)
                     <div>
                       <p className="text-sm font-medium text-rose-500">Today</p>
                       <p className="text-2xl font-bold">
-                        {appointmentData?.data.filter((a) => a.slotTime === format(new Date(), "yyyy-MM-dd")).length}
+                        {paginatedAppointments.filter((a) => a.slotTime === format(new Date(), "yyyy-MM-dd")).length}
                       </p>
                     </div>
                   </CardContent>
@@ -543,6 +559,32 @@ console.log("appointmentData", appointmentData)
             </CardContent>
           </Card>
         </TabsContent>
+
+        {appointments.length >= 5 && (
+                <div className="border-t border-gray-200 py-4 flex items-center justify-between px-6">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-teal-500 hover:text-teal-600"
+                    onClick={handlePrev}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </Button>
+                  <p className="text-sm text-gray-500">
+                    Page {currentPage} of {totalPages}
+                  </p>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-teal-500 hover:text-teal-600"
+                    onClick={handleNext}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next
+                  </Button>
+                </div>
+              )}
 
         {/* <TabsContent value="telemedicine" className="mt-4">
           <Card>
