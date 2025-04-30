@@ -48,6 +48,17 @@ function BloodBank() {
 
   const COLORS = ["#00a19d", "#26c6c2", "#66d9d6", "#b3eceb", "#008f8b", "#007e7a", "#006c68", "#005a58"];
 
+  if (isLoading) {
+    return (
+        <div className="flex items-center justify-center h-screen">
+            <div className="flex flex-col items-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-teal-500"></div>
+                <p className="mt-4 text-gray-600">Loading...</p>
+            </div>
+        </div>
+    );
+}
+
   return (
     <div className="flex flex-col justify-between gap-4 mb-6 p-4">
       <div className="flex items-center justify-between mb-6">

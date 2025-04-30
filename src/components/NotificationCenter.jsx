@@ -26,7 +26,7 @@
     const { data: patientNotification = [], error, refetch } = useGetNotificationsByEmailQuery(email, {
       skip: !email, // This tells RTK Query to skip fetching if email is undefined
     });
-    // console.log("patientNotification", patientNotification)
+    console.log("patientNotification", patientNotification)
     // const [ deleteNotifications ] = useDeleteNotificationsMutation();
     const [ deleteAllNotifications ] = useDeleteAllNotificationsMutation();
     const formatDate = useFormattedDate() 

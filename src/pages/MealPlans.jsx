@@ -33,6 +33,7 @@ import "react-toastify/dist/ReactToastify.css";
 import {socket} from "../components/hooks/useInitSocket";
 import { useCreateNotificationsMutation } from "../redux/slices/notificationSlice";
 import { useFetchLoggedInUserQuery } from "../redux/slices/authSlice"
+import { useSelector } from "react-redux";
 
 export default function MealPlans() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -61,6 +62,9 @@ export default function MealPlans() {
     status: "Active",
   });
   const [editMealData, setEditMealData] = useState(null)
+  const { mode } = useSelector((state) => state.theme);
+      
+  const isDark = mode === "dark"
 
   useEffect(()=>{
     if(editMealData){
@@ -185,8 +189,9 @@ export default function MealPlans() {
         });
       }
   
-      if (response?.success) {
-        socket.emit("operation-scheduled", {
+      console.log("response", response)
+      if (response?.success === true) {
+        socket.emit("meal-plan-assigned", {
           to: response.data.patientDetails,
           message: "Meal assigned to you",
           date: new Date(),
@@ -244,19 +249,40 @@ export default function MealPlans() {
   const totalPages = Math.ceil((filteredMealPlanBills?.length || 0) / recordsPerPage);
 
   // Status badge color mapping
-  const getStatusColor = (status) => {
+  const getStatusColor = (status, isDark) => {
     const statusColors = {
-      Active: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-      Inactive: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
-      Completed: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-      Scheduled: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
-      Billed: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-      Pending: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
-      Paid: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-      "Not Billed": "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
-      Overdue: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+      Active: isDark
+        ? "bg-green-900 text-green-300"
+        : "bg-green-100 text-green-800",
+      Inactive: isDark
+        ? "bg-gray-800 text-gray-300"
+        : "bg-gray-100 text-gray-800",
+      Completed: isDark
+        ? "bg-blue-900 text-blue-300"
+        : "bg-blue-100 text-blue-800",
+      Scheduled: isDark
+        ? "bg-purple-900 text-purple-300"
+        : "bg-purple-100 text-purple-800",
+      Billed: isDark
+        ? "bg-blue-900 text-blue-300"
+        : "bg-blue-100 text-blue-800",
+      Pending: isDark
+        ? "bg-yellow-900 text-yellow-300"
+        : "bg-yellow-100 text-yellow-800",
+      Paid: isDark
+        ? "bg-green-900 text-green-300"
+        : "bg-green-100 text-green-800",
+      "Not Billed": isDark
+        ? "bg-gray-800 text-gray-300"
+        : "bg-gray-100 text-gray-800",
+      Overdue: isDark
+        ? "bg-red-900 text-red-300"
+        : "bg-red-100 text-red-800",
     };
-    return statusColors[status] || "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300";
+  
+    return statusColors[status] || (isDark
+      ? "bg-gray-800 text-gray-300"
+      : "bg-gray-100 text-gray-800");
   };
 
   return (
@@ -356,7 +382,7 @@ export default function MealPlans() {
                           <TableCell>{plan.calories}</TableCell>
                           <TableCell>${plan.costPerDay.toFixed(2)}</TableCell>
                           <TableCell>
-                            <Badge className={getStatusColor(plan.status)}>{plan.status}</Badge>
+                            <Badge className={getStatusColor(plan.status, isDark)}>{plan.status}</Badge>
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex justify-end space-x-2">
@@ -427,10 +453,10 @@ export default function MealPlans() {
                         <TableCell>{new Date(assignment.startDate).toLocaleDateString()}</TableCell>
                         <TableCell>{new Date(assignment.endDate).toLocaleDateString()}</TableCell>
                         <TableCell>
-                          <Badge className={getStatusColor(assignment.status)}>{assignment.status}</Badge>
+                          <Badge className={getStatusColor(assignment.status, isDark)}>{assignment.status}</Badge>
                         </TableCell>
                         <TableCell>
-                          <Badge className={getStatusColor(assignment.billingStatus)}>{assignment.billingStatus}</Badge>
+                          <Badge className={getStatusColor(assignment.billingStatus, isDark)}>{assignment.billingStatus}</Badge>
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end space-x-2">

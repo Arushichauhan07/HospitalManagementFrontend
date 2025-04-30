@@ -26,14 +26,14 @@ export const notificationsApi = createApi({
         try {
           // Wait for the mutation response to resolve
           const { data } = await queryFulfilled;
-          console.log("data", data)
+          console.log("data  from not slice", data)
           // Emitting the notification to socket after it's created
           // Assuming you have a socket instance in context or import it here
 
           socket.emit("notification-sent", {
-            to: notificationData.receiver,
+            to: data.data.receiver[0],
             message: data.data.message, // Assuming this is in the response
-            notDesc: notificationData.notDesc,
+            notDesc: data.data.notDesc,
           });
 
         } catch (error) {

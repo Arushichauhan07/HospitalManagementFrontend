@@ -65,8 +65,8 @@ export default function Operations() {
     }
   },[data]);
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error}</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return <p>Error: {error}</p>;
 
 
   // console.log("operationsData", operationsData)
@@ -132,6 +132,17 @@ export default function Operations() {
   }
 
   const isDark = mode === "dark";
+
+  if (isLoading) {
+    return (
+        <div className="flex items-center justify-center h-screen">
+            <div className="flex flex-col items-center">
+                <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-teal-500"></div>
+                <p className="mt-4 text-gray-600">Loading...</p>
+            </div>
+        </div>
+    );
+}
   return (
     <>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 p-4">
